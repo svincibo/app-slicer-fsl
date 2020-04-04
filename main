@@ -2,4 +2,4 @@
 #PBS -l nodes=1:ppn=1,walltime=0:00:10
 #PBS -N app-slicer-midsagittal
 
-time singularity exec -e docker::/brainlife/fsl:5.0.9 ./run.sh
+time singularity exec -e docker://brainlife/fsl:5.0.9 ./run.sh
