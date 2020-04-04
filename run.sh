@@ -1,14 +1,23 @@
 #!/bin/bash
 
-# t1/t2, flair, dwi, or fmri
-input=`jq -r '.input' config.json`
+# noddi
+fa=`jq -r '.fa' config.json`
+md=`jq -r '.md' config.json`
+ad=`jq -r '.ad' config.json`
+rd=`jq -r '.rd' config.json`
+met="fa md ad rd"
+
 outdir="raw"
 
 mkdir -p $outdir
 
-slicer ${input} -a ${outdir}/out.png
+for MET in $met
+do
+	img=$(eval "echo \$${MET}")
+	slicer ${img} -a ${outdir}/${MET}.png
+done
 
-if [ ! -f ${outdir}/out.png ]; then
+if [ ! -f ${outdir}/rd.png ]; then
 	echo "failed"
 	exit 1
 else
