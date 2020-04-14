@@ -2,4 +2,12 @@
 #PBS -l nodes=1:ppn=1,walltime=0:00:10
 #PBS -N app-slicer-midsagittal
 
-time singularity exec -e docker://brainlife/ui-fsleyes:18.04 ./run.sh
+anat=`jq -r '.anat' config.json`
+
+[ ! -f t1.nii.gz ] && cp ${anat} ./
+
+[ ! -f dwi.nii.gz ] && time singularity exec -e docker://brainlife/fsl:5.0.9 ./mask.sh
+
+time singularity exec -e docker://brainlife/fsleyes:1.0 xvfb-run -s "-screen 0 640x480x24" ./run.sh
+
+[ -f ./raw/out.png ] && rm -r *.nii.gz && echo "complete" || echo "failed"
